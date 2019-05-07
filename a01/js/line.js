@@ -1,41 +1,139 @@
 {
-    let check = function(point1,point2){
-        var k=0;
-        var dy = point2[1] - point1[1];
-        var dx = point2[0] - point1[0];
-        if (dy)
+   /**
+    * @method getK 对点的一些前置处理 可以优化为函数装饰器
+    * @param {*} point1 
+    * @param {*} point2 
+    */ 
+    let getK = function(p1,p2){
+        //取整数
+        p1.x = parseInt(p1.x); p1.y = parseInt(p1.y);
+        p2.x = parseInt(p2.x); p2.y = parseInt(p2.y);
+        //大小排序
+        if(p1.x>p2.x)
         {
-            k = dy/dx;
-            k =  (Math.abs(k)>1)?false:true;
+            let temp = p1;p1 = p2;p2 = temp;
         }
-        return !!k;
+        var flag = false;
+        var k=0;
+        var pNum = p2.x - p1.x,
+            dy = p2.y - p1.y,
+            dx = p2.x - p1.x;
+
+        k = dy/dx;
+        flag = (Math.abs(k)>1);
+        if(flag)
+        {
+            k =  1/k;
+            pNum = p2.y - p1.y;
+            //对点的坐标进行倒置换
+            let temp;
+            temp = p1.x; p1.x=p1.y; p1.y=temp;
+            temp = p2.x; p2.x=p2.y; p2.y=temp; 
+        }
+        return {p1,p2,flag,pNum,k};
     };
+    
+    /**
+     * @method  parsePoint 将一个数学点转换为一个屏幕点（+0.5取整）
+     * @param {*} point 
+     */
+    let parsePoint = function(point){
+        var {x,y} = point;
+        return {x:parseInt(x+0.5),y:parseInt(y+0.5)}; 
+    };
+    
 
     /*
      * 数值微分法的实现
      */
-    let zLine_shuZhi = function (p1,p2){
+    let zLine_shuZhi = function (p1,p2, k=(p2.y-p1.y)/(p2.x-p1.x)){
+       
         var res =[];
-        var x = p1[0];
-        var y = p1[1];
-        //首先求k
-        var k = (p2[1]-p1[1])/(p2[0]-p1[0]);
+        var {x,y}=p1,maxX = p2.x;
         //递增
-        while (res.length != p2[0]-p1[0])
+        while (x<=maxX )
         {
             x++;
             y += k;
-            res.push([x,y]);
+            //基于斜率进行的运算 无法绕开小数  要进行一此取证书
+            res.push( parsePoint({x,y}));
         }
         return res;
     };
 
-    function drawLine(p1,p2,color){
-        var points = zLine_shuZhi(p1,p2);
+    /**
+     * 中点画线算法的实现
+     */
+    let zLine_zhongDian = function (p1,p2){
+        var res = [];
+        //使用一般式表示的直线 aX+bY+C=0
+        var {x,y}=p1, maxX = p2.x,
+        a = -(p2.y-p1.y),b = p2.x-p1.x;
+        //构造判别式d
+        //这里的d其实是d*2  目的是避开小数
+        d = 2*a+b;
+        //分离的d1和d2 是为了在增量时省下一次加法
+        d1 = 2*a;
+        d2 = 2*(a+b);
+
+        res.push({x,y})
+       
+        while (x<=maxX)
+        {
+            x++;
+            if (d<0)
+            {
+                y++;
+                d+=d2;
+            }
+            else
+            {
+                d+=d1;
+            }
+            res.push({x,y});
+        }
+        return res;
+    };
+
+    /**
+     * BresenHam 算法的实现                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+     */
+
+    let zLine_BresenHam = function(p1,p2){
+        var res =[];
+        //比较直线与网格线交点的距离
+        var {x,y}=p1,maxX=p2.x;
+        //这里的e其实是d-0.5
+        var dx=p2.x-p1.x,dy=p2.y-p1.y,e=-dx;
+        //*2以消除小数
+        dx=2*dx;dy=2*dy;
+        do
+        {
+            res.push({x,y});
+            x++;
+            e+=dy;
+            if(e>=0)
+            {
+                y++;
+                e-=dx;
+            }
+        }
+        while(x<=maxX)
+
+        return res;
+
+
+    };
+
+    function drawLine(point1,point2,color){
+       
+        //k值检测
+        var {p1,p2,flag,pNum,k} = getK(toP(point1),toP(point2));
+        var fun = zLine_BresenHam; 
+        var points = fun(p1,p2,k);console.log(points);
         points.forEach( p=>{
-            draw(p[0],p[1],color)
+            draw(p, flag, color);
         } );
     }
 }
 
-drawLine([20,20],[40,20]);

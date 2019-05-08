@@ -19,18 +19,18 @@
 
     let zCricle_zhongDian = function(o,r,res=[]){
         //首先看作圆心为(0,0)的圆，运算出点之后加上真正的圆心偏移量 d为顶点向右第一个点的判定表达式
-        //每次判断两个候选点中点与圆的位置关系
-        var x=0,y=r,d=1.25-r;
+        //每次判断两个候选点中点与圆的位置关系 e= 4*d
+        var x=0,y=r,d=1.25-r,e=5-4*r;
         res.push({x,y});
         while(x<=y)
         {
-            if(d<0)
+            if(e<0)
             {
-                d+=2*x+3;
+                e+=8*x+12;
             }
             else
             {
-                d+=2*(x-y)+5;y--;
+                e+=8*(x-y)+20;y--;
             }
             x++;
             res.push({x,y});

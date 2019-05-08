@@ -5,9 +5,6 @@
     * @param {*} point2 
     */ 
     let getK = function(p1,p2){
-        //取整数
-        p1.x = parseInt(p1.x); p1.y = parseInt(p1.y);
-        p2.x = parseInt(p2.x); p2.y = parseInt(p2.y);
         //大小排序
         if(p1.x>p2.x)
         {
@@ -132,7 +129,7 @@
         var fun = zLine_BresenHam; 
         var points = fun(p1,p2,k);console.log(points);
         points.forEach( p=>{
-            draw(p, flag, color);
+            draw(p, color, flag);
         } );
     }
 }

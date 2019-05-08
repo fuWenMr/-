@@ -13,7 +13,7 @@ const config = {
 /*
  *绘制点的方法
  */ 
-function draw(p,isInversion,color="#000")
+function draw(p,color="#000",isInversion)
 {
     var {x,y} = p;
     ctx1.fillStyle = color;
@@ -25,6 +25,8 @@ function draw(p,isInversion,color="#000")
     ctx1.fillRect(x*basicSize,y*basicSize,basicSize,basicSize);
 }
 
-function toP(arr){
-    return {x:arr[0],y:arr[1]}
+function toP(arr)
+{
+    //对象化  取整数
+    return {x:parseInt(arr[0]),y:parseInt(arr[1])}
 }

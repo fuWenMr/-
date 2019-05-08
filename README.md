@@ -1,7 +1,7 @@
 # computeGraphicsTry
 纯粹用来学习计算机图形学的笔记和代码  ，代码质量和工程思想无关
 
-##日志
+## 日志
 
 2016.05.07-am 创建了基本的canvas  tool.js提供了绘制点等基础方法,也将是唯一使用canvasAPI的js。test.js用来写测试代码（其实就是简单调用）
 

@@ -58,6 +58,42 @@
             draw(p,color);
         })
     }
+}
+
+/**
+ * 关于多边形
+ */
+
+{
+    /**
+     * @method sortPointsByY 将传入的几个点按照的先y再x的顺序排雷
+     * @param  {...any} points 
+     */
+    let sortPointsByY = function(...points){
+
+    };
+
+    /**
+     * @method getLinesByPoints 将传入的几个点转化为带斜率边
+     * @param  {...any} points 
+     */
+    let getLinesByPoints = function(...points){
+        var res=[];
+        var firstPoint = points.shift();
+        var p1 = firstPoint,p2;
+        for(let i in points)
+        {
+            p2 = points[i];
+            res.push({p1,p2,k:(p2.y-p1.y)/(p2.x-p1.x)});
+            p1=p2;
+        }
+        p2 = firstPoint;
+        res.push({p1,p2,k:(p2.y-p1.y)/(p2.x-p1.x)});
+        return res;
+    };
+
+
+
     function drawRect(startP,w,h,color,res=[])
     {
         return res;

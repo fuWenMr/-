@@ -16,22 +16,36 @@ const config = {
 /*
  *绘制点的方法
  */ 
-function draw(p,color="#000",isInversion)
+function draw(points,color="#000",isInversion)
 {
-    var {x,y} = p;
+    
     ctx1.fillStyle = color;
-    //交换x,y
-    if (isInversion)
+    if(!Array.isArray(points))
     {
-        let temp = x;x=y;y=temp;
+        points =[points];
     }
-    ctx1.fillRect(x*basicSize,y*basicSize,basicSize,basicSize);
+    //交换x,y
+    points.forEach(p=>{
+        let {x,y} = p;
+        if (isInversion)
+        {
+            let temp = x;x=y;y=temp;
+        }
+        ctx1.fillRect(x*basicSize,y*basicSize,basicSize,basicSize);
+        
+    });
+    
 }
 
 function toP(arr)
 {
+    if(!Array.isArray(arr))
+    {
+        let {x,y}=arr;
+        return {x,y};
+    }
     //对象化  取整数
-    return {x:parseInt(arr[0]),y:parseInt(arr[1])}
+    return {x:parseInt(arr[0]+0.5),y:parseInt(arr[1]+0.5)}
 }
 
 

@@ -67,10 +67,10 @@
      * BresenHam 算法的实现                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
      */
 
-    let zLine_BresenHam = function(p1,p2){
+    let zLine_BresenHam = function(p1,p2,k){
         var res =[];
         //比较直线与网格线交点的距离
-        var {x,y}=p1,maxX=p2.x;
+        var {x,y}=p1,maxX=p2.x,flag=k>=0?1:-1;
         //这里的e其实是d-0.5
         var dx=p2.x-p1.x,dy=p2.y-p1.y,e=-dx;
         //*2以消除小数
@@ -80,14 +80,13 @@
             res.push({x,y});
             x++;
             e+=dy;
-            if(e>=0)
+            if(flag*e>=0)
             {
-                y++;
+                y+=flag;
                 e-=dx;
             }
         }
         while(x<=maxX)
-
         return res;
 
 
@@ -98,7 +97,7 @@
         //k值检测
         var {p1,p2,flag,pNum,k} = getK(toP(point1),toP(point2));
         var fun = zLine_BresenHam; 
-        var points = fun(p1,p2,k);console.log(points);
+        var points = fun(p1,p2,k);
         points.forEach( p=>{
             draw(p, color, flag);
         } );
